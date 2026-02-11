@@ -1,25 +1,23 @@
-# 🚀 AI Customer Support – Multi-Agent System
+# AI Customer Support – Multi-Agent System
 
-An AI-powered customer support platform built using a Router-based multi-agent architecture.  
-Designed with clean backend principles, tool-based reasoning, and persistent conversational context.
-
-> Built with production-grade architecture principles — not vibe-coded.
+An AI-powered customer support platform built using a Router based multi agent architecture.  
+Designed with clean backend principles, tool based reasoning, and persistent conversational context.
 
 ---
 
-# ✨ Highlights
+# Highlights
 
-- 🧠 Router-based Multi-Agent System
-- 🏗 Controller–Service Architecture
-- 🛠 Tool-based data access (anti-hallucination boundary)
-- 💾 Persistent conversations (PostgreSQL + Prisma)
-- 🔀 Domain-specific sub-agents
-- 🧩 Clean separation of concerns
-- 📈 Scalable and extensible design
+- Router-based Multi-Agent System
+- Controller–Service Architecture
+- Tool-based data access (anti-hallucination boundary)
+- Persistent conversations (PostgreSQL + Prisma)
+- Domain-specific sub-agents
+- Clean separation of concerns
+- Scalable and extensible design
 
 ---
 
-# 🏛 Architecture Philosophy
+# Architecture
 
 This project follows three core principles:
 
@@ -41,7 +39,7 @@ This prevents hallucination and enforces structured reasoning.
 
 ---
 
-# 🧱 System Architecture
+# System Architecture
 
 ## High-Level Overview
 
@@ -97,7 +95,7 @@ flowchart LR
 
 ---
 
-# 🔁 Query Processing Lifecycle
+# Query Processing Lifecycle
 
 ```mermaid
 sequenceDiagram
@@ -125,7 +123,7 @@ sequenceDiagram
 
 ---
 
-# 🧠 Multi-Agent Routing Logic
+# Multi-Agent Routing Logic
 
 ```mermaid
 flowchart TD
@@ -146,7 +144,7 @@ flowchart TD
 
 ---
 
-# 🗄 Data Model
+# Data Model
 
 ```mermaid
 erDiagram
@@ -194,7 +192,7 @@ erDiagram
 
 ---
 
-# 🧩 Agent Design
+# Agent Design
 
 ## Router Agent
 - Intent classification only
@@ -215,7 +213,7 @@ erDiagram
 
 ---
 
-# 🛠 Tools Layer
+# Tools Layer
 
 Tools enforce strict data access control.
 
@@ -232,7 +230,7 @@ Rules:
 
 ---
 
-# 🌐 API Endpoints
+# API Endpoints
 
 ```
 /api
@@ -249,7 +247,7 @@ Rules:
 
 ---
 
-# ⚙️ Local Setup
+# Local Setup
 
 ## 1️⃣ Clone Repo
 
@@ -315,7 +313,7 @@ http://localhost:3001
 
 ---
 
-# 📁 Project Structure
+# Project Structure
 
 ```
 backend/
@@ -333,7 +331,7 @@ frontend/
 
 ---
 
-# 🔒 Error Handling Strategy
+# Error Handling Strategy Used
 
 - Global error middleware
 - Structured JSON error responses
@@ -342,7 +340,7 @@ frontend/
 
 ---
 
-# 📈 Scalability Considerations
+# Scalability Considerations
 
 - Add new agents without touching router logic
 - Replace Gemini with any LLM
@@ -352,18 +350,7 @@ frontend/
 
 ---
 
-# 🎥 Demo Walkthrough Plan
-
-1. Switch users
-2. Ask order status → routed to Order Agent
-3. Ask refund → Billing Agent
-4. Ask general question → Support Agent
-5. Show conversation persistence
-6. Show database records
-
----
-
-# 🧪 Future Enhancements
+# Future Enhancements
 
 - Streaming responses (SSE)
 - Rate limiting
@@ -374,20 +361,16 @@ frontend/
 
 ---
 
-# 🏆 Why This Project Stands Out
+# Why My Project Stands Out
 
 - Not a simple chatbot
-- Not a single-agent wrapper
+- Not a single agent wrapper
 - Structured multi-agent orchestration
 - Clean separation of responsibilities
 - Production-minded architecture
 
 ---
 
-# 📜 License
 
-MIT
 
----
-
-Built with engineering discipline.
+Built with engineering discipline using ai as a companion not vibe coding.
