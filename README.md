@@ -1,31 +1,55 @@
-# AI Customer Support – Multi-Agent System
+# 🚀 AI Customer Support – Multi-Agent System
 
-AI-powered customer support system built with a Router Agent that delegates to specialized Support, Order, and Billing agents.
+An AI-powered customer support platform built using a Router-based multi-agent architecture.  
+Designed with clean backend principles, tool-based reasoning, and persistent conversational context.
 
-The system maintains conversation context, uses tool-based data access, and persists everything in PostgreSQL via Prisma.
-
----
-
-# 🚀 Tech Stack
-
-- Backend: Node.js + Hono
-- Database: PostgreSQL
-- ORM: Prisma
-- AI Model: Gemini API
-- Architecture: Controller–Service Pattern
-- Multi-Agent Design: Router + Sub-Agents
+> Built with production-grade architecture principles — not vibe-coded.
 
 ---
 
-# 🏗 System Architecture
+# ✨ Highlights
 
-## High-Level Architecture
+- 🧠 Router-based Multi-Agent System
+- 🏗 Controller–Service Architecture
+- 🛠 Tool-based data access (anti-hallucination boundary)
+- 💾 Persistent conversations (PostgreSQL + Prisma)
+- 🔀 Domain-specific sub-agents
+- 🧩 Clean separation of concerns
+- 📈 Scalable and extensible design
+
+---
+
+# 🏛 Architecture Philosophy
+
+This project follows three core principles:
+
+### 1️⃣ Router = Classification
+The Router Agent does **intent detection only**.  
+It never generates user-facing responses.
+
+### 2️⃣ Agents = Domain-Bounded Reasoners
+Each agent operates strictly within its domain:
+- Support
+- Order
+- Billing
+
+### 3️⃣ Tools = Trust Boundary
+Agents never access the database directly.  
+All data access is done through deterministic tools.
+
+This prevents hallucination and enforces structured reasoning.
+
+---
+
+# 🧱 System Architecture
+
+## High-Level Overview
 
 ```mermaid
 flowchart LR
 
   subgraph Frontend
-    UI[Chat UI]
+    UI[Chat Interface]
     HIST[Conversation History]
   end
 
@@ -33,7 +57,7 @@ flowchart LR
     API[REST API]
     CTRL[Controllers]
     SRV[Services]
-    AG[Agent System]
+    AG[Agent Orchestrator]
     ROUTER[Router Agent]
     SUP[Support Agent]
     ORD[Order Agent]
@@ -73,9 +97,35 @@ flowchart LR
 
 ---
 
-# 🧠 Multi-Agent Architecture
+# 🔁 Query Processing Lifecycle
 
-## Router-Based Delegation
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant FE as Frontend
+    participant C as Controller
+    participant S as Service
+    participant R as Router
+    participant A as Sub-Agent
+    participant DB as Database
+
+    U->>FE: Send Message
+    FE->>C: POST /api/chat/messages
+    C->>S: Validate & Forward
+    S->>DB: Persist User Message
+    S->>R: Classify Intent
+    R-->>S: support | order | billing
+    S->>A: Delegate Request
+    A->>DB: Fetch Tool Data
+    A-->>S: Generated Response
+    S->>DB: Persist Assistant Message
+    S-->>C: Final JSON
+    C-->>FE: Response
+```
+
+---
+
+# 🧠 Multi-Agent Routing Logic
 
 ```mermaid
 flowchart TD
@@ -85,10 +135,9 @@ flowchart TD
   SUPPORT[Support Agent]
   ORDER[Order Agent]
   BILLING[Billing Agent]
-  FALLBACK[Fallback Response]
+  FALLBACK[Fallback Handler]
 
   USER_MSG --> ROUTER
-
   ROUTER -->|support| SUPPORT
   ROUTER -->|order| ORDER
   ROUTER -->|billing| BILLING
@@ -97,37 +146,7 @@ flowchart TD
 
 ---
 
-# 🔄 User Query Processing Flow
-
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant FE as Frontend
-    participant API as Controller
-    participant SRV as Service
-    participant RA as Router Agent
-    participant SA as Sub-Agent
-    participant DB as Database
-
-    U->>FE: Send Message
-    FE->>API: POST /api/chat/messages
-    API->>SRV: Validate & Pass Input
-    SRV->>DB: Save User Message
-    SRV->>RA: Classify Intent
-    RA-->>SRV: Agent Type
-    SRV->>SA: Delegate
-    SA->>DB: Fetch Tool Data
-    SA-->>SRV: Generated Reply
-    SRV->>DB: Save Assistant Message
-    SRV-->>API: Return Response
-    API-->>FE: JSON Reply
-```
-
----
-
-# 🗃 Data Model
-
-## Entity Relationships
+# 🗄 Data Model
 
 ```mermaid
 erDiagram
@@ -175,38 +194,41 @@ erDiagram
 
 ---
 
-# 🧩 Agent Responsibilities
+# 🧩 Agent Design
 
 ## Router Agent
-- Classifies intent
-- Delegates to correct sub-agent
-- Does NOT access DB
+- Intent classification only
+- Returns: `support | order | billing | fallback`
+- No DB access
 
 ## Support Agent
+- Uses conversation history
 - Handles FAQs and troubleshooting
-- Uses conversation history tool
 
 ## Order Agent
-- Handles order status and tracking
-- Uses order tools
+- Fetches order data via tools
+- Answers strictly from order records
 
 ## Billing Agent
+- Fetches billing records via tools
 - Handles invoices and refunds
-- Uses billing tools
 
 ---
 
-# 🔐 Tools Layer (Trust Boundary)
+# 🛠 Tools Layer
 
-Tools:
-- `getConversationHistory`
-- `getOrdersByUser`
-- `getBillingRecordsByUser`
+Tools enforce strict data access control.
+
+Examples:
+
+- `getConversationHistory(conversationId)`
+- `getOrdersByUser(userId)`
+- `getBillingRecordsByUser(userId)`
 
 Rules:
-- Tools only query database
+- Tools are pure DB functions
 - No AI inside tools
-- Agents never access Prisma directly
+- Agents never use Prisma directly
 
 ---
 
@@ -227,12 +249,12 @@ Rules:
 
 ---
 
-# ⚙️ Setup Instructions
+# ⚙️ Local Setup
 
-## 1️⃣ Clone Repository
+## 1️⃣ Clone Repo
 
 ```bash
-git clone <your-repo-url>
+git clone <repo-url>
 cd ai-customer-support/backend
 ```
 
@@ -260,16 +282,16 @@ CREATE DATABASE ai_customer_support;
 
 ## 4️⃣ Configure Environment
 
-Create `.env`:
+Create `.env` file:
 
 ```
 DATABASE_URL="postgresql://postgres:password@localhost:5432/ai_customer_support"
-GEMINI_API_KEY=your_api_key_here
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
 ---
 
-## 5️⃣ Run Prisma Migration
+## 5️⃣ Prisma Setup
 
 ```bash
 npx prisma migrate dev
@@ -279,32 +301,16 @@ npx prisma db seed
 
 ---
 
-## 6️⃣ Start Backend
+## 6️⃣ Run Backend
 
 ```bash
 npm run dev
 ```
 
-Backend runs at:
+Server runs at:
 
 ```
 http://localhost:3001
-```
-
----
-
-# 🖥 Frontend Setup
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Frontend runs at:
-
-```
-http://localhost:3000
 ```
 
 ---
@@ -323,65 +329,65 @@ backend/
     db/
   prisma/
 frontend/
-  components/
-  pages/
 ```
 
 ---
 
-# ✅ Features Implemented
+# 🔒 Error Handling Strategy
 
-- Controller–Service architecture
-- Router agent + 3 sub-agents
-- Tool-based database access
-- Persistent conversations
-- Intent classification
-- Multi-agent delegation
-- Clean separation of concerns
+- Global error middleware
+- Structured JSON error responses
+- Graceful fallback agent
+- Defensive routing
 
 ---
 
-# ❗ Known Gaps (Optional Improvements)
+# 📈 Scalability Considerations
 
-- Streaming responses
-- Context compaction
+- Add new agents without touching router logic
+- Replace Gemini with any LLM
+- Introduce streaming easily
+- Horizontal scaling possible
+- Context compaction ready
+
+---
+
+# 🎥 Demo Walkthrough Plan
+
+1. Switch users
+2. Ask order status → routed to Order Agent
+3. Ask refund → Billing Agent
+4. Ask general question → Support Agent
+5. Show conversation persistence
+6. Show database records
+
+---
+
+# 🧪 Future Enhancements
+
+- Streaming responses (SSE)
 - Rate limiting
-- Unit tests
-- Hono RPC monorepo
-- Live deployment
+- Context compaction
+- Unit & integration tests
+- Monorepo with Hono RPC
+- Production deployment
 
 ---
 
-# 🎥 Demo Script
+# 🏆 Why This Project Stands Out
 
-1. Send order query → routed to Order Agent
-2. Send billing query → routed to Billing Agent
-3. Send general support query → Support Agent
-4. Show conversation history
-5. Show database persistence
-
----
-
-# 🏆 Architecture Philosophy
-
-> Router = classification problem  
-> Agents = domain-bounded decision makers  
-> Tools = trust boundary against hallucination  
-
-This design ensures scalability, modularity, and production readiness.
-
----
-
-# 📌 Final Notes
-
-This project demonstrates:
-- Multi-agent orchestration
-- Clean backend design
-- Practical AI integration
-- Persistent conversational systems
+- Not a simple chatbot
+- Not a single-agent wrapper
+- Structured multi-agent orchestration
+- Clean separation of responsibilities
+- Production-minded architecture
 
 ---
 
 # 📜 License
 
 MIT
+
+---
+
+Built with engineering discipline.
